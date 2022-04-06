@@ -12,7 +12,6 @@ In the following, we give a short overview of this GitLab repository. It contain
 * [datasets](https://gitlab.ethz.ch/nsg/students/projects/2021/ma-2021-46-tobias-buner-building-a-multicloud-based-serverless-web-ecosystem/-/tree/master/code/datasets/EClog): Contains scripts for the initial record evaluation of the web server log used in our evaluation (not relevant for the evaluation in this paper).
 * [CaseStudy](https://gitlab.ethz.ch/nsg/students/projects/2021/ma-2021-46-tobias-buner-building-a-multicloud-based-serverless-web-ecosystem/-/tree/master/code/CaseStudy): Contains scripts for the DNS case study we did at the beginning regarding several DNS service providers.
 
-**Important**: The cloud-storage directory contains the ".env" file, which contains the secret access key of the AWS account used in this work. So, keep this repository private or remove this file. The file is required to create the binaries.
 
 ## Setup
 We briefly discuss the setup of our system with respect to AWS. It is important to note that this description focuses primarily on running the system on the AWS account provided as part of this work. In order to run it on a separate AWS account, we provide a brief overview here and note that some hard coded parts in the source code must be modified. It contains a `.env` file that contains the AWS account information and the name of the S3 bucket. In addition, the instance IDs, AWS Lambda function name, and Redis authentication password are hard-coded in the source code and need to be changed when running on a separate AWS account.
