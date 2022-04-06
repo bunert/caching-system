@@ -1,0 +1,19 @@
+Simulation (minutes):      30.0           
+Number of requests:        118            
+Start:                     2022-02-17 13:23:47+01:00
+End:                       2022-02-17 13:53:47+01:00
+========================================
+Cost Evaluation (all USD)
+Lambda compute cost:       0.0058610654000000005
+	  billed duration (ms):      350962         
+Lambda request cost:       0.0000062      
+	  lambda invokes:            31             
+EC2-Redis cost:            0.0011166666666666666
+	  runtime (s):               300            
+	  invokes:                   1              
+S3 request costs:          0.00003268     
+	  S3 requests:               74             
+	  lambda cold starts:        1              
+	  EC2-Redis starts:          1              
+----------------------------------------
+total cost:                0.007016612066666667

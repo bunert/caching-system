@@ -1,0 +1,402 @@
+{
+    "schemes": [
+        "http"
+    ],
+    "swagger": "2.0",
+    "info": {
+        "description": "Functionality to test the control mechanism of the Orchestrator.\n* Start Lambda-Runtimes\n* Start/Stop EC2 Redis instance",
+        "title": "Orchestrator Control API",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "Tobias Buner",
+            "email": "bunert@ethz.ch"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0"
+    },
+    "basePath": "/api/v1",
+    "paths": {
+        "/": {
+            "get": {
+                "description": "get the status of server.",
+                "consumes": [
+                    "*/*"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "root"
+                ],
+                "summary": "Show the status of server.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/ec2/start": {
+            "post": {
+                "description": "Starts the corresponding EC2 Redis instance.",
+                "consumes": [
+                    "*/*"
+                ],
+                "tags": [
+                    "EC2 Redis Management"
+                ],
+                "summary": "Start an EC2 Redis instance serving the given object.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "/ec2/stop": {
+            "post": {
+                "description": "Stops the corresponding EC2 Redis instance.",
+                "consumes": [
+                    "*/*"
+                ],
+                "tags": [
+                    "EC2 Redis Management"
+                ],
+                "summary": "Stop the EC2 Redis instance serving the given object.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "/gateway/state": {
+            "get": {
+                "description": "logs the forwarding status.",
+                "consumes": [
+                    "*/*"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Gateway Info"
+                ],
+                "summary": "Show the status of the Gateway forwarding rules in the Gateway Log.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/lambda/start": {
+            "post": {
+                "description": "Starts a corresponding Lambda-Runtime.\nKeep in mind that the Lambda-Runtime currently works with a timer with shuts down after 5 seconds when no request was received.\nAfter a request was received, the timer extends for 1 second.",
+                "consumes": [
+                    "*/*"
+                ],
+                "tags": [
+                    "Lambda-Runtime Management"
+                ],
+                "summary": "Start a Lambda-Runtime serving the given object.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Object Key (e.g. index.html)",
+                        "name": "key",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "/lambda/stop": {
+            "post": {
+                "description": "Stops the corresponding Lambda-Runtime.",
+                "consumes": [
+                    "*/*"
+                ],
+                "tags": [
+                    "Lambda-Runtime Management"
+                ],
+                "summary": "Stop the running Lambda-Runtime.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Object Key (e.g. index.html)",
+                        "name": "key",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "/redis/allKeys": {
+            "get": {
+                "description": "Scans for all available keys currently stored on the given Redis instance.",
+                "consumes": [
+                    "*/*"
+                ],
+                "tags": [
+                    "EC2 Redis Operations"
+                ],
+                "summary": "EC2 Redis retrieve all current keys",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "/redis/del/": {
+            "post": {
+                "description": "Uses Redis Client to remove the specified object.",
+                "consumes": [
+                    "*/*"
+                ],
+                "tags": [
+                    "EC2 Redis Operations"
+                ],
+                "summary": "Removes an objectfrom the EC2 Redis instance",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Object Key (e.g. index.html)",
+                        "name": "key",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "/redis/get/{key}": {
+            "get": {
+                "description": "Uses Redis Client to retrieve the specified object.",
+                "consumes": [
+                    "*/*"
+                ],
+                "tags": [
+                    "EC2 Redis Operations"
+                ],
+                "summary": "Get an object from EC2 Redis instance.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Object Key (e.g. index.html)",
+                        "name": "key",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "/redis/ping": {
+            "get": {
+                "description": "Executes a Redis Ping request.",
+                "consumes": [
+                    "*/*"
+                ],
+                "tags": [
+                    "EC2 Redis Operations"
+                ],
+                "summary": "EC2 Redis Ping for a fixed InstandeId",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "/redis/set/file/": {
+            "post": {
+                "description": "Uses Redis Client to push the specified object.",
+                "consumes": [
+                    "*/*"
+                ],
+                "tags": [
+                    "EC2 Redis Operations"
+                ],
+                "summary": "Pushes an object to the EC2 Redis instance",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "value",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "/redis/set/inline": {
+            "post": {
+                "description": "Uses Redis Client to push the specified object.",
+                "consumes": [
+                    "*/*"
+                ],
+                "tags": [
+                    "EC2 Redis Operations"
+                ],
+                "summary": "Pushes an object to the EC2 Redis instance",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "object key name",
+                        "name": "key",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "object value",
+                        "name": "value",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

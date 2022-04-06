@@ -1,0 +1,83 @@
+basePath: /api/v1
+info:
+  contact:
+    email: bunert@ethz.ch
+    name: Tobias Buner
+  description: |-
+    Gateway (Proxy) Server acting as a middle man for API requests for an actual Cloud Storage Service.
+    * GET requests for S3 working
+    * POST requests for S3 working (not used atm)
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Gateway Server API
+  version: "1.0"
+paths:
+  /:
+    get:
+      consumes:
+      - '*/*'
+      description: get the status of server.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Show the status of server.
+      tags:
+      - root
+  /objects/{key}:
+    get:
+      consumes:
+      - '*/*'
+      description: get the object from S3 referenced by the Key.
+      parameters:
+      - description: S3 Key (e.g. index.html)
+        in: path
+        name: key
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            type: object
+      summary: Get the image referenced by the Key from the S3 bunert-testbucket.
+      tags:
+      - Testing
+  /objects/upload:
+    post:
+      consumes:
+      - '*/*'
+      description: uploads the image from the body to the S3 bucket.
+      parameters:
+      - description: image
+        in: formData
+        name: file
+        required: true
+        type: file
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      summary: Upload a given image to the S3 bucket bunert-testbucket
+      tags:
+      - Testing
+schemes:
+- http
+swagger: "2.0"

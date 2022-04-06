@@ -1,0 +1,10 @@
+Simulation (minutes):      60.0           
+Number of requests:        175            
+Start:                     2022-01-12 16:05:50+01:00
+End:                       2022-01-12 17:05:50+01:00
+========================================
+Cost Evaluation (all USD)
+S3 request costs:          0.00000043     
+ElastiCache costs:         0.038          
+----------------------------------------
+total cost:                0.03800043     

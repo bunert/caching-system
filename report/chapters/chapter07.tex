@@ -1,0 +1,36 @@
+\chapter{Related Work}
+\label{cha:related_work}
+This chapter gives a small insight into existing projects and research in related areas within the scope of this thesis. In Section~\ref{sec:in_memory_caching} we introduce the development of in-memory key-value stores such as Redis and newly proposed approaches. The various cloud services offer great opportunities to build multi-tier systems based on different services. We present examples of this approach in the area of cloud storage in Section~\ref{subsec:multi_layer_storage_system}. Since we use the serverless platform in our work as an additional in-memory layer, Section~\ref{sec:serverless_computing_rw} introduces work in the area of serverless computing and presents a system for caching large objects with serverless functions. In Section~\ref{sec:intermediate_data_caching}, we present a different view of caching than latency improvement.
+
+\section{In-Memory Caching}
+\label{sec:in_memory_caching}
+In-memory caching will continue to be a hot topic in research and academia due to the increasing amount of data in daily applications and the desire for the best possible performance. Redis and Memcached are two popular and well-known in-memory caching solutions supported by cloud providers through managed services such as ElastiCache~\cite{noauthor_amazon_nodate-1}, Google Memorystore~\cite{noauthor_memorystore_nodate}, and Azure Cache~\cite{noauthor_azure_nodate}. 
+
+~\\
+While most modern applications rely on such a managed service to improve performance in some way, Facebook has even developed its own distributed key-value store to meet its specific needs based on Memcached~\cite{nishtala_scaling_nodate}. These managed in-memory caching services are commonly used to accelerate the performance of a persistence storage service. In the context of our work, we focused on S3 and Redis with ElastiCache as the managed service. The same principle is found in other services such as AWS DynamoDB~\cite{noauthor_fast_nodate}, a fully managed NoSQL database service. DynamoDB Accelerator (DAX) is a fully managed caching service to increase performance for read-intensive workloads~\cite{noauthor_amazon_2017}.
+
+~\\
+There are numerous case studies and analyses on existing in-memory key-value stores~\cite{kaur_-memory_2018, chen_towards_2016, lubis_multi-thread_2015} and their workload~\cite{atikoglu_workload_2012}. With the changing requirements and limitations of existing systems, they are constantly evolving, or even new systems are proposed to overcome these problems. Thus, improvements to Redis such as memory management optimization~\cite{zhang_redis_2018} and multi-thread support~\cite{lubis_multi-thread_2015} are not uncommon. Other systems such as MICA focus on multicore architectures to improve performance for write-intensive workloads~\cite{lim_mica_2014}. BlueCache uses flash memory and a flash controller implemented directly in hardware to achieve comparable performance at a lower memory cost by avoiding DRAM~\cite{xu_bluecache_2016}. Mega-KV's proposed use of GPUs to improve performance~\cite{zhang_mega-kv_2015}. Bullet attempts to combine the advantages of byte-addressable persistent memory with the lower latency of DRAM to build a key-value store~\cite{huang_closing_2018}. Or Minos, which uses size-aware sharding to improve performance~\cite{didona_size-aware_2018}.
+
+% paragraph about serverless computing and the work done in this are (some connection to in-memory storage possible?)
+\section{Multi-Layer Storage Systems}
+\label{subsec:multi_layer_storage_system}
+Different storage systems offer a specific trade-off between cost, latency, and capacity. So while S3 offers higher latency with lower cost and unlimited capacity, ElastiCache offers much lower latency with limited capacity and higher cost. In our work, we do not try to reinvent an existing storage system but rather combine the advantageous features of some systems to create an overall better system. An example in this direction is Anna~\cite{wu_autoscaling_2019}. This efficient key-value store can scale not only horizontally but also vertically with respect to different storage levels and thus different cost/performance ratios. Vertical scaling thus includes an in-memory tier using the memory of EC2 instances, a flash storage tier using Elastic Block Store (EBS), and possibly other tiers such as S3 and even S3 Glacier\footnote{AWS S3 Glacier is a low-cost archive storage.}. The system automatically adapts to the monitored workload using a reactive policy engine. The policy engine attempts to derive the most cost-effective policies according to the objective set by the system administrator.
+
+\section{Serverless Computing}
+\label{sec:serverless_computing_rw}
+Systems such as Cloudburst~\cite{sreekanti_cloudburst_2020}, which uses Anna under the hood, or Pocket~\cite{klimovic_pocket_nodate} are proposed as solutions for the serverless platform to enable stateful functions and cost-effective data sharing. InfiniCache~\cite{wang_infinicache_2020}, on the other hand, uses the serverless platform to build a cost-effective object caching system. Their system uses the memory resources of AWS Lambda's execution environments to store objects and only pays for the resources once the function is actually executed. By cleverly orchestrating their functions and maintaining their execution environment with so-called warm-up operations, they have built a pay-per-use caching system based on requests rather than node hours, as is the case with popular in-memory caching services like ElastiCache.
+
+\section{Intermediate Data Caching}
+\label{sec:intermediate_data_caching}
+Another interesting use case is CPU-bound applications, where many resources are consumed to repeatedly compute values, while in-memory caching allows these values to be computed only once. An interesting paper on this topic evaluates the trade-off between recomputing data items or caching them in a cloud storage service such as S3~\cite{scouarnec_cache_2014}. Their system uses an analytical model with the assumption of a specific distribution for request arrival times. The right cache policies can be derived in terms of cost, reducing the cost of a cloud-based system.
+
+% InfiniCache: Exploiting Ephemeral Serverless Functions to Build a Cost-Effective Memory Cache~\cite{wang_infinicache_2020}.
+% Autoscaling Tiered Cloud Storage in Anna~\cite{wu_autoscaling_2019}.
+% Cloudburst: Stateful Functions-as-a-Service~\cite{sreekanti_cloudburst_2020}.
+% Pocket: Elastic Ephemeral Storage for Serverless Analytics~\cite{klimovic_pocket_nodate}.
+% AutoSight: Distributed Edge Caching in Short Video Network~\cite{zhang_autosight_2020}.
+% DeepCache: A Deep Learning Based Framework For Content Caching~\cite{narayanan_deepcache_2018}.
+% Cache policies for cloud-based systems: To keep or not to keep~\cite{scouarnec_cache_2014}.
+% Shuffling, Fast and Slow: Scalable Analytics on Serverless Infrastructure~\cite{pu_shuffling_2019}.
+% Scaling Memcache at Facebook~\cite{nishtala_scaling_nodate}.

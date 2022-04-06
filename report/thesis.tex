@@ -1,0 +1,88 @@
+\documentclass[11pt,oneside]{book}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{lscape}
+\usepackage{psfrag}
+\usepackage[usenames]{color}
+\usepackage{bbm}
+\usepackage[update]{epstopdf}
+\usepackage[bookmarks,pdfstartview=FitH,pdfborder={0 0 0}]{hyperref}
+\usepackage{verbatim}
+\usepackage{listings}
+\usepackage{textcomp}
+\usepackage{fancyhdr}
+\usepackage{multirow}
+\usepackage{tikz}
+\usepackage{lipsum}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{mathtools}
+\usepackage[T1]{fontenc}
+\usepackage{adjustbox}
+\newcommand{\hint}[1]{{\color{blue} \em #1}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\ra}[1]{\renewcommand{\arraystretch}{#1}}
+
+\begin{document}
+
+% Update the Thesis inforation below!
+\begin{titlepage}
+    \centering
+    \includegraphics[width=\textwidth]{figures/eth-nsg-header}\\[60mm]
+    %
+    {\Huge\bf\sf{
+        Building a Reactive Caching System with Serverless Computing %\\[5mm]
+        % Second Line of Thesis Title
+    }}\\[10mm]
+    {\Large\bf\sf Master Thesis}\\[3mm]
+    %
+    {\Large\bf\sf Author: Tobias Buner} \\[5mm]
+    {\sf Tutor: Ege Cem Kirci, Rui Yang}\\[5mm]
+    {\sf Supervisor: Prof. Dr. Laurent Vanbever}\\[30mm]
+    %
+    {\sf September 2021 to March 2022}
+\end{titlepage}
+
+\thispagestyle{empty}
+\newpage
+\pagenumbering{roman}
+\include{chapters/acknowledgement}
+\include{chapters/abstract}
+
+\clearpage
+\setcounter{tocdepth}{2}
+\tableofcontents
+\clearpage
+
+\pagenumbering{arabic}
+
+\include{chapters/chapter01}
+\include{chapters/chapter02}
+\include{chapters/chapter03}
+\include{chapters/chapter04}
+\include{chapters/chapter05}
+\include{chapters/chapter06}
+\include{chapters/chapter07}
+\include{chapters/chapter08}
+
+\clearpage
+
+\addcontentsline{toc}{chapter}{References}
+% \bibliographystyle{acm}
+\bibliographystyle{IEEEtran}
+\bibliography{IEEEabrv, zotero}
+
+\clearpage
+\appendix
+\pagenumbering{Roman}
+
+\include{chapters/appendix}
+
+\end{document}

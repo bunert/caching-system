@@ -1,0 +1,72 @@
+\chapter{Introduction}
+\label{cha:introduction}
+% * Motivate in-memory caching (motivation).
+% * Breve introduction of our system and give a general direction   when and how our system can be helpful.
+% * Clarify what the system is capable of and summarize the simplifications we did (Restrictions and Assumptions).
+% *  Overview of the Thesis.
+
+% \begin{itemize}
+%     \item Software as a Service (SaaS): CSPs host the application which is then used by customers (e.g. Google Docs).
+%     \item Platform as a Service (PaaS): CSPs provide the runtime environment as a platform that developers can easily use for deployment (e.g. AWS Elastic Beanstalk\footnote{Service for automatic deployment of uploaded code~\cite{noauthor_aws_nodate}.}) 
+%     \item Infrastructure as a Service (IaaS): Offers essential compute, storage, and networking resources as a service on demand (e.g. AWS EC2 and S3).
+% \end{itemize}
+
+Cloud computing has evolved from a promising business idea to ubiquitous technology over the past decade. The advantages and key features of cloud computing, such as scalability and elasticity in an easy-to-use environment, formed the basis for its success~\cite{saraswat_cloud_2020}. The leading cloud service providers~(CSPs) are Amazon Web Services (AWS)~\cite{noauthor_cloud_nodate-4}, Google Cloud Platform (GCP)~\cite{noauthor_cloud_nodate-3}, and Microsoft Azure~\cite{noauthor_cloud_nodate-2}. The services themselves are often categorized based on the service model into Software as a Service (SaaS), Platform as a Service (PaaS), and Infrastructure as a Service (IaaS). Cloud computing offers almost unlimited possibilities for the development of applications within the cloud environment, which also requires storage options. 
+
+~\\
+The evolution of storage was already a ubiquitous topic even without cloud computing, leading to various storage services offered as IaaS and commonly referred to as cloud storage. Cloud storage comes in all forms and guarantees in terms of data management. For the purposes of this work, we focus on the performance guarantees related to latency and associated costs. Therefore, cloud storage services range from slow inexpensive to fast but costly in-memory caching services. Latency is often critical to the user experience. As a result, in-memory caching is often used to accelerate slower storage tiers to reduce latency for latency-critical parts. 
+
+~\\
+While most cloud-based services follow the pay-per-use model, the way each service implements this varies widely. Slower storage tiers often offer a pay-as-you-go model in terms of storage capacity used and the number of accesses, while the pricing model changes with in-memory caching. In-memory caching is tightly coupled to nodes that provide the in-memory capacity, resulting in a pay-per-use model in terms of node hours. The cost-effectiveness of cloud-based in-memory caching systems is therefore highly workload-dependent. Imagine an application with a latency-critical part that is only needed situationally for short periods. We refer to this setting as \emph{bursty workloads} so that in-memory caching is only needed for the duration of these workloads with unknown arrival times. The pay-per-use model for in-memory caching, based on node hours, is clearly not optimized for this situation where workloads last less than an hour and consequently suffer from cost inefficiencies. The elasticity to respond to these workloads cost-effectively is clearly limited by the design of current managed in-memory caching services.
+
+~\\
+This work addresses the cost inefficiency of a managed in-memory caching service for bursty workloads. We develop a system targeting these situations and using a reactive design to avoid over-provisioning in-memory caching resources. Redis~\cite{noauthor_redis_nodate-3} is one of the most popular in-memory data structure stores and provides the foundation for our in-memory caching layer. However, the main contribution of our work is the reactive orchestrator of our system, which attempts to provide a low-cost in-memory caching system. The dynamically updatable reverse proxy provides the entry point for requests and forwards them based on the orchestrator's decisions. The responsiveness of our system is crucial for a cost-efficient in-memory caching service. Especially since the price depends directly on the duration in which in-memory caching is needed, but also the latency plays an important role; a reactive system that provides in-memory caching only after a few dozen seconds has clearly missed its target. To mitigate this problem, we explore the opportunities offered by the emerging serverless computing platform as an additional in-memory caching layer~\cite{noauthor_serverless_nodate}. Although serverless computing is a less cost-effective tier in terms of GB-seconds compared to Redis, we leverage the fast startup times of the serverless platform to build our reactive system. The design of our system addresses the need for a more elastic managed caching service that avoids over-provisioning in-memory resources when they are not needed through its reactive design. 
+
+% ~\\
+% This is achieved by using a dynamically updatable reverse proxy which can forward the requests to situationally running in-memory caching layer according to the decisions made by our reactive orchestrator. 
+% Our system uses a reverse proxy to forward requests to the appropr
+
+~\\
+It is challenging to build a cost-effective in-memory caching system for applications that rely on it for only a fraction of an hour. It becomes even more complicated when we assume that the arrival time of these workloads is unknown and changes over time, making the use of learning algorithms challenging. Amazon provides a fully-managed service for Redis called ElastiCache~\cite{noauthor_amazon_nodate-1},  which follows the pay-per-use model of node hours and does not provide the desired elasticity. In addition to this managed service, Redis can also be hosted on cloud units that follow a pay-per-use model on a node-per-second basis and provide better elasticity. However, once we leave the comfort zone of a managed service in the cloud, the system administrator is responsible for cost-effectively managing the Redis cluster. The most straightforward approach is to build a reactive system based on self-hosted Redis instances. This approach results in poor guarantees for short burst workloads because the response time is limited by the time required to start an instance. The benefit of a fully managed service to a system administrator is undeniable. Therefore, our system addresses the challenge of building a managed system that builds on the simple reactive design but improves the responsiveness by integrating an additional in-memory caching layer with serverless computing.
+
+% However, once we leave the comfortable zone of a managed service in the cloud, a lot of responsibility falls on the system administrator to get everything right. The advantage of a fully managed service is undeniable for a system administrator. Still, the flexibility these systems offer is clearly limited during short peaks of required in-memory caching. This scenario can be extended to general workloads, as the same principle applies to scaling the in-memory caching system. If scaling is only required for a fraction of an hour, the pricing model does not provide the desired elasticity in terms of cost efficiency.
+
+~\\
+We explore the potential of serverless computing to enable a reactive in-memory caching system that responds in a timely manner. The reactive design provides a managed service that relieves the system administrator of managing an in-memory cache cost-effectively. The elasticity of our reactive system enables fine-grained and cost-effective in-memory caching. Building a hybrid in-memory caching layer based on Redis and serverless computing seems promising for our particular setting. Our in-memory caching layer achieves similar latencies compared to a pure Redis-based system. It provides the same end-to-end latency reduction by a factor of three for the slower cloud storage service AWS S3. For a single burst workload of varying duration but less than an hour, our system achieves an in-memory percentage of about 95\% at a lower cost than a full node hour for self-hosted Redis and ElastiCache. We even achieve costs on the order of self-hosted Redis running for precisely the duration of the workload.
+
+% The reactive design of our in-memory caching system is able to achieve a high in-memory percentage around 95\% with an end-to-end latency reduction by a factor of 3 despite the great influence of the Internet traffic latency. Our in-memory layer achieves similar latencies compared to a pure Redis based system while offering
+
+% \begin{itemize}
+%     \item Motivate in-memory caching.
+%     \item Use the AWS ElastiCache billing granularity and the effort to design an automation process for self-hosted Redis with regard to short lasting peak workloads to motivate the usage of Serverless with regard to caching.
+%     \item Explain the core goal our system tries to achieve.
+%     \item Limitations within the scope of this work and that we cover topics within the outlook chapter to make our system comparable to AWS ElastiCache by providing a fully managed in-memory caching service.
+% \end{itemize}
+
+% \begin{itemize}
+%     \item Motivate the problem (What is the problem?, Why is it important? What is your observation? How did you approach the problem?)
+%     \item Discuss what you did and present main findings (Able to reduce costs in case of unpredictable peaks, Serverless platform offers great opportunities to build a reactive multi-layer caching system)
+%     \item 
+% \end{itemize}
+
+% \section*{Overview}
+% \label{sec:overview}
+~\\
+In Chapter~\ref{cha:background} we introduce relevant technologies and infrastructures in the context of this work. Chapter~\ref{cha:design} describes the goal of our system and its design. The following is a more detailed description of each part in terms of its implementation and motivation in Chapter~\ref{cha:implementation}. Chapter~\ref{cha:evaluation} provides experimental results for our system to evaluate the usability of our approach. Some simplifications and limitations that make this work possible within the scope of this thesis, and how our current system can overcome them, are highlighted in the discussion in Chapter~\ref{cha:discussion_and_outlook}. Chapter~\ref{cha:related_work} presents related work in caching and serverless computing in the context of this work. Finally, Chapter~\ref{cha:conclusion_and_outlook} concludes this thesis.
+
+
+% Example table:
+% \begin{table}[htbp]
+%     \centering
+%         \begin{tabular}{ c  p{130pt}  l }
+%         \toprule
+%         Column 1 & Column 2 \newline (additional line) & Column 3 \\
+%         \midrule
+%         C1,R2 & C2,R2 & C2,R3 \\
+%         C1,R3	& \multicolumn{2}{ c }{C2\&C3,R3} \\
+%         C1,R4 & C2,R4 & C3,R4\\
+%         \bottomrule
+%         \end{tabular}
+%     \caption{Table 1}
+%     \label{tab:table1}
+% \end{table}

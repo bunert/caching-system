@@ -1,0 +1,276 @@
+basePath: /api/v1
+info:
+  contact:
+    email: bunert@ethz.ch
+    name: Tobias Buner
+  description: |-
+    Functionality to test the control mechanism of the Orchestrator.
+    * Start Lambda-Runtimes
+    * Start/Stop EC2 Redis instance
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Orchestrator Control API
+  version: "1.0"
+paths:
+  /:
+    get:
+      consumes:
+      - '*/*'
+      description: get the status of server.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Show the status of server.
+      tags:
+      - root
+  /ec2/start:
+    post:
+      consumes:
+      - '*/*'
+      description: Starts the corresponding EC2 Redis instance.
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      summary: Start an EC2 Redis instance serving the given object.
+      tags:
+      - EC2 Redis Management
+  /ec2/stop:
+    post:
+      consumes:
+      - '*/*'
+      description: Stops the corresponding EC2 Redis instance.
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      summary: Stop the EC2 Redis instance serving the given object.
+      tags:
+      - EC2 Redis Management
+  /gateway/state:
+    get:
+      consumes:
+      - '*/*'
+      description: logs the forwarding status.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Show the status of the Gateway forwarding rules in the Gateway Log.
+      tags:
+      - Gateway Info
+  /lambda/start:
+    post:
+      consumes:
+      - '*/*'
+      description: |-
+        Starts a corresponding Lambda-Runtime.
+        Keep in mind that the Lambda-Runtime currently works with a timer with shuts down after 5 seconds when no request was received.
+        After a request was received, the timer extends for 1 second.
+      parameters:
+      - description: Object Key (e.g. index.html)
+        in: query
+        name: key
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      summary: Start a Lambda-Runtime serving the given object.
+      tags:
+      - Lambda-Runtime Management
+  /lambda/stop:
+    post:
+      consumes:
+      - '*/*'
+      description: Stops the corresponding Lambda-Runtime.
+      parameters:
+      - description: Object Key (e.g. index.html)
+        in: query
+        name: key
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      summary: Stop the running Lambda-Runtime.
+      tags:
+      - Lambda-Runtime Management
+  /redis/allKeys:
+    get:
+      consumes:
+      - '*/*'
+      description: Scans for all available keys currently stored on the given Redis
+        instance.
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      summary: EC2 Redis retrieve all current keys
+      tags:
+      - EC2 Redis Operations
+  /redis/del/:
+    post:
+      consumes:
+      - '*/*'
+      description: Uses Redis Client to remove the specified object.
+      parameters:
+      - description: Object Key (e.g. index.html)
+        in: query
+        name: key
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      summary: Removes an objectfrom the EC2 Redis instance
+      tags:
+      - EC2 Redis Operations
+  /redis/get/{key}:
+    get:
+      consumes:
+      - '*/*'
+      description: Uses Redis Client to retrieve the specified object.
+      parameters:
+      - description: Object Key (e.g. index.html)
+        in: path
+        name: key
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      summary: Get an object from EC2 Redis instance.
+      tags:
+      - EC2 Redis Operations
+  /redis/ping:
+    get:
+      consumes:
+      - '*/*'
+      description: Executes a Redis Ping request.
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      summary: EC2 Redis Ping for a fixed InstandeId
+      tags:
+      - EC2 Redis Operations
+  /redis/set/file/:
+    post:
+      consumes:
+      - '*/*'
+      description: Uses Redis Client to push the specified object.
+      parameters:
+      - description: value
+        in: formData
+        name: file
+        required: true
+        type: file
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      summary: Pushes an object to the EC2 Redis instance
+      tags:
+      - EC2 Redis Operations
+  /redis/set/inline:
+    post:
+      consumes:
+      - '*/*'
+      description: Uses Redis Client to push the specified object.
+      parameters:
+      - description: object key name
+        in: query
+        name: key
+        required: true
+        type: string
+      - description: object value
+        in: query
+        name: value
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      summary: Pushes an object to the EC2 Redis instance
+      tags:
+      - EC2 Redis Operations
+schemes:
+- http
+swagger: "2.0"

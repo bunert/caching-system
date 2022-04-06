@@ -1,0 +1,58 @@
+{"rule":"SENTENCE_WHITESPACE","sentence":"^\\QDownloader you can download the value using the specified key and a fixed bucket.\\E$"}
+{"rule":"SENTENCE_WHITESPACE","sentence":"^\\QContext which is then returned to the querying application/client.\\E$"}
+{"rule":"SENTENCE_WHITESPACE","sentence":"^\\QContext and returned to the querying application/client.\\E$"}
+{"rule":"SENTENCE_WHITESPACE","sentence":"^\\QDownloader the value can be downloaded using the specified key and a fixed bucket.\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QAdditionally, the payload includes two addresses, one for the proxy server and the other for the orchestrator server, remember we receive the specific proxy address in the ProxyHello message.\\E$"}
+{"rule":"SENTENCE_WHITESPACE","sentence":"^\\QTicker with a period of one minute to periodically check it the Redis server should be stopped.\\E$"}
+{"rule":"SENTENCE_WHITESPACE","sentence":"^\\QTicker with a period of one minute to periodically check if the Redis server should be stopped.\\E$"}
+{"rule":"SUBJECT_VERB_AGREEMENT_PLURAL","sentence":"^\\QThe goroutine that handles the event when the function returns also differs slightly depending on what state we are in when the function returns.\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qspike-simple: ec2log:\\E$"}
+{"rule":"LC_AFTER_PERIOD","sentence":"^\\QThe Python module numpy is used to draw a sample from a normal distribution with the function random.normal, setting the center to 0, interpreting the standard deviation as seconds, and giving it as argument and the number of samples.\\E$"}
+{"rule":"SUBJECT_VERB_AGREEMENT_PLURAL","sentence":"^\\QThe Python package requests is used to send the HTTP requests, which also allows us to measure the latency between sending the requests and the arrival of the response using the built-in elapsed.\\E$"}
+{"rule":"SUBJECT_VERB_AGREEMENT_PLURAL","sentence":"^\\QThe Python package requests is used to send the HTTP requests, which also allows us to measure the latency between sending the requests and the arrival of the response using the built-in elapsed field in the response.\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QFindSchedule \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\QThe g.c.d. of a and b \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q empty list \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q empty list further requests to process \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q is \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q This is a comment \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q is \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q is \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q \\E(?:Dummy|Ina|Jimmy-)[0-9]+$"}
+{"rule":"WHITESPACE_RULE","sentence":"^\\Qswitch case assert [1] (#1)[1] #1  [1] #1 EndSwitchEndCase\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\Qswitch case assert [1] (#1)[1] #1  [1] #1 EndSwitchEndCase\\E$"}
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qswitch case assert [1] (#1)[1] #1  [1] #1 EndSwitchEndCase\\E$"}
+{"rule":"SUBJECT_VERB_AGREEMENT_PLURAL","sentence":"^\\QThe Python package requests is used to send the HTTP requests, and the package time with the time function is used to measure the end-to-end latency.\\E$"}
+{"rule":"UNIT_SPACE","sentence":"^\\QThe object is a simple text file generated using the command given below, while we repeated the experiment for different object sizes (100B, 1KB, 1MB, 100MB)\\E$"}
+{"rule":"UNIT_SPACE","sentence":"^\\QThe object is a simple text file generated using the command given below, while we repeated the experiment for different object sizes (100B, 1KB, 1MB, 100MB).\\E$"}
+{"rule":"UNIT_SPACE","sentence":"^\\QThe object is a simple text file generated using the command given below, while we repeated the experiment for different object sizes (100B, 1KB, and 1MB).\\E$"}
+{"rule":"UNIT_SPACE","sentence":"^\\QThe object is a simple text file generated using the command below, and we repeated the experiment for different object sizes (100B, 1KB and 1MB).\\E$"}
+{"rule":"UNIT_SPACE","sentence":"^\\QThe object is 1KB in size and has 30 measurements per endpoint.\\E$"}
+{"rule":"UNIT_SPACE","sentence":"^\\QThe object is 1MB in size and has 30 measurements per endpoint.\\E$"}
+{"rule":"ENGLISH_WORD_REPEAT_BEGINNING_RULE","sentence":"^\\QEnd-to-end latency measurement on the client/application.\\E$"}
+{"rule":"ENGLISH_WORD_REPEAT_BEGINNING_RULE","sentence":"^\\QProxy latency measurement for handling the API request.\\E$"}
+{"rule":"UNIT_SPACE","sentence":"^\\QWhen we take a look at the proxy measurements for the 1MB object, the storage layer latency increases similar as before between 100B and 1KB, while the latency increases drastically for each in-memory layer compared to the changes between 100B and 1KB.\\E$"}
+{"rule":"UNIT_SPACE","sentence":"^\\QEnd-to-end latency measurement (1KB).\\E$"}
+{"rule":"UNIT_SPACE","sentence":"^\\QProxy latency measurement (1KB).\\E$"}
+{"rule":"UNIT_SPACE","sentence":"^\\QEnd-to-end latency measurement (1MB).\\E$"}
+{"rule":"UNIT_SPACE","sentence":"^\\QThe same order of magnitude remains for the 1KB object.\\E$"}
+{"rule":"UNIT_SPACE","sentence":"^\\QProxy latency measurement (1MB).\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QThe object is a simple text file extracted from the Linux pseudorandom number generator of a given length, and we repeated the experiment for different object sizes (100B, 1KB, and 1MB).\\E$"}
+{"rule":"UNIT_SPACE","sentence":"^\\QThe object is a simple random text file of a given size, and we repeated the experiment for different object sizes (100B, 1KB, and 1MB).\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QThe proxy copies the received object into the API response, which is a simple copy from the io package.\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QConfigurator Input System Parameters rate sensitivity TICK lambdaWE lambdaT redisT redisU 1 2 3 4 5 6 7 Comparison of different system parameters depending on the system configurator input.\\E$"}
+{"rule":"ENGLISH_WORD_REPEAT_BEGINNING_RULE","sentence":"^\\QSimulation on a trace using 600 samples from the normal distribution with standard deviation 300.\\E$"}
+{"rule":"ENGLISH_WORD_REPEAT_BEGINNING_RULE","sentence":"^\\QSimulation on a trace using 300 samples from the normal distribution with standard deviation 150.\\E$"}
+{"rule":"WHETHER","sentence":"^\\QAssuming that requests arrive according to a homogeneous Poisson process, the question of whether to keep or not to keep an item can be solved analytically.\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QAWS Lambda Self-Hosted Redis AWS S3 Simulation Duration Cost Inv.\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QCold Cost Duration Inv.\\E$"}
+{"rule":"ADD_AN_ADDITIONAL","sentence":"^\\QTo address the long startup times of EC2 instances hosting a Redis server, we add an additional in-memory caching layer in the form of serverless compute units.\\E$"}
+{"rule":"LC_AFTER_PERIOD","sentence":"^\\QMultiple goroutines could read and overwrite those entries as we will see later, so we use a synchronized mapping from the sync.map go package.\\E$"}
+{"rule":"SUBJECT_VERB_AGREEMENT_PLURAL","sentence":"^\\QThe Python package requests is used to send the HTTP requests at the correct time specified by the delay in the trace file.\\E$"}
+{"rule":"UNIT_SPACE","sentence":"^\\QSo see the impact of the object size, we tested for three different sizes (100B, 1KB, and 1MB) and repeated the measurement 30 times each to capture the variance.\\E$"}
+{"rule":"UNIT_SPACE","sentence":"^\\QReverse Proxy latency measurement (1KB).\\E$"}
+{"rule":"UNIT_SPACE","sentence":"^\\QReverse Proxy latency measurement (1MB).\\E$"}
+{"rule":"UNIT_SPACE","sentence":"^\\QFor each endpoint, we repeated the measurement 30 times to capture the variance, and we also used different object sizes (100B, 1KB, and 1MB) to see the effects.\\E$"}
+{"rule":"UNIT_SPACE","sentence":"^\\QWhen we take a look at the reverse proxy measurements for the 1MB object, the storage layer latency increases similar as before between 100B and 1KB, while the latency increases drastically for each in-memory layer compared to the changes between 100B and 1KB.\\E$"}
+{"rule":"ENGLISH_WORD_REPEAT_BEGINNING_RULE","sentence":"^\\QEnd-to-end latency measurement (1MB).\\E$"}
+{"rule":"ENGLISH_WORD_REPEAT_BEGINNING_RULE","sentence":"^\\QReverse Proxy latency measurement (1MB).\\E$"}
+{"rule":"THIS_NNS_VB","sentence":"^\\QThis targets burst workloads where a constantly running instance would not be cost-effective.\\E$"}
+{"rule":"LC_AFTER_PERIOD","sentence":"^\\QAs we will see later, multiple goroutines could read and overwrite these entries, so a safe mapping for concurrent use from the Go package sync.map is used.\\E$"}
+{"rule":"UNIT_SPACE","sentence":"^\\QWe repeated the measurement 30 times to capture the variance for each endpoint, and we also used different object sizes (100B, 1KB, and 1MB) to see the effects.\\E$"}
+{"rule":"UNIT_SPACE","sentence":"^\\QWhen we look at the reverse proxy measurements for the 1MB object, the storage layer latency increases similar to before between 100B and 1KB.\\E$"}
+{"rule":"UNIT_SPACE","sentence":"^\\QIn contrast, the latency increases drastically for each in-memory layer compared to the changes between 100B and 1KB.\\E$"}
+{"rule":"DID_FOUND_AMBIGUOUS","sentence":"^\\QWe also calculate the percentage of an hour that the number of spikes could span without overlapping.\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\Q1.2 AWS Lambda Self-Hosted Redis AWS S3 2-6 8-10 12-13 Simulation Duration Cost Inv.\\E$"}
+{"rule":"LC_AFTER_PERIOD","sentence":"^\\QThe Python module numpy is used to draw samples from a normal distribution using the random.normal function.\\E$"}

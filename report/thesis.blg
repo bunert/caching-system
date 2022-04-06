@@ -1,0 +1,86 @@
+This is BibTeX, Version 0.99d (TeX Live 2021/Arch Linux)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: thesis.aux
+A level-1 auxiliary file: chapters/acknowledgement.aux
+A level-1 auxiliary file: chapters/abstract.aux
+A level-1 auxiliary file: chapters/chapter01.aux
+A level-1 auxiliary file: chapters/chapter02.aux
+A level-1 auxiliary file: chapters/chapter03.aux
+A level-1 auxiliary file: chapters/chapter04.aux
+A level-1 auxiliary file: chapters/chapter05.aux
+A level-1 auxiliary file: chapters/chapter06.aux
+A level-1 auxiliary file: chapters/chapter07.aux
+A level-1 auxiliary file: chapters/chapter08.aux
+The style file: IEEEtran.bst
+A level-1 auxiliary file: chapters/appendix.aux
+Reallocated singl_function (elt_size=8) to 100 items from 50.
+Reallocated singl_function (elt_size=8) to 100 items from 50.
+Reallocated singl_function (elt_size=8) to 100 items from 50.
+Reallocated wiz_functions (elt_size=8) to 6000 items from 3000.
+Reallocated singl_function (elt_size=8) to 100 items from 50.
+Database file #1: IEEEabrv.bib
+Database file #2: zotero.bib
+-- IEEEtran.bst version 1.14 (2015/08/26) by Michael Shell.
+-- http://www.michaelshell.org/tex/ieeetran/bibtex/
+-- See the "IEEEtran_bst_HOWTO.pdf" manual for usage information.
+Warning--missing publisher in chen_towards_2016
+Warning--empty author in noauthor_performance_nodate
+Warning--empty journal in noauthor_performance_nodate
+Warning--empty year in noauthor_performance_nodate
+Warning--empty journal in klimovic_pocket_nodate
+Warning--empty year in klimovic_pocket_nodate
+Warning--empty booktitle in wang_peeking_2018
+Warning--empty booktitle in shahrad_serverless_2020
+Warning--empty journal in wawrzoniak_boxer_2021
+Warning--empty booktitle in wang_infinicache_2020
+Warning--empty booktitle in mahgoub_sonic_2021
+Warning--empty author in noauthor_security_nodate
+Warning--empty journal in noauthor_security_nodate
+Warning--empty year in noauthor_security_nodate
+Warning--empty journal in nishtala_scaling_nodate
+Warning--empty year in nishtala_scaling_nodate
+Warning--empty booktitle in huang_closing_2018
+
+Done.
+You've used 68 entries,
+            4087 wiz_defined-function locations,
+            1686 strings with 31982 characters,
+and the built_in function-call counts, 39672 in all, are:
+= -- 2970
+> -- 942
+< -- 210
++ -- 501
+- -- 179
+* -- 2034
+:= -- 6008
+add.period$ -- 136
+call.type$ -- 68
+change.case$ -- 83
+chr.to.int$ -- 483
+cite$ -- 85
+duplicate$ -- 3037
+empty$ -- 3443
+format.name$ -- 215
+if$ -- 9080
+int.to.chr$ -- 0
+int.to.str$ -- 68
+missing$ -- 611
+newline$ -- 327
+num.names$ -- 39
+pop$ -- 1743
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 2
+skip$ -- 2926
+stack$ -- 0
+substring$ -- 1249
+swap$ -- 2205
+text.length$ -- 49
+text.prefix$ -- 0
+top$ -- 5
+type$ -- 68
+warning$ -- 17
+while$ -- 132
+width$ -- 70
+write$ -- 686
+(There were 17 warnings)

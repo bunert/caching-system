@@ -1,0 +1,123 @@
+\chapter{Discussion}
+\label{cha:discussion_and_outlook}
+The evaluation yields some important insights into the performance of our system. Since our work serves as a proof-of-concept for building a reactive in-memory caching system with serverless computing, we have made some simplifications to make this possible within the scope of this work. Here we provide an overview of these limitations, while in the following sections, we elaborate on each limitation and suggest how our system can be extended to overcome them. We should note that the main reason for these limitations was the limited time for implementation. However, each section relates to the design goal of our system at the end and justifies the simplification. Finally, in Section~\ref{sec:usability} we summarize the discussion from the evaluation in terms of usability of our system. 
+
+% Section~\ref{sec:limitations_and_restrictions} presents some limitations and constraints of our system that allowed us to build it as part of this work. In Section~\ref{sec:usability}, we summarize the discussion from the evaluation in terms of the usability of our system at the current state of implementation. The discussion highlights the usability of the serverless platform as a second in-memory caching layer to build a low-cost reactive in-memory caching system. Section~\ref{sec:outlook} explores how the limitations of our system can be overcome, and suggests future work to develop a fully managed in-memory caching system. 
+
+% TODO: extend, why the limitation?, what was hard?, what was the reason? What would change and make it harder? 
+\begin{itemize}
+    \item Our system is currently only able to handle a single object (see Section ~\ref{sec:multiple_objects}).
+    \item The scaling aspect is considered future work, as right now our system is based on a single AWS Lambda function with 1024 MB of memory and an EC2 instance of type \code{t2.micro} for the Redis layer, which limits the amount of data to be cached in our system (see Section~\ref{sec:scaling}).
+    \item Consistency issues in our system are ignored for now by only supporting \code{get} requests (see Section~\ref{sec:api_extension}).
+\end{itemize}
+
+\section{Multiple Objects}
+\label{sec:multiple_objects}
+% one lambda function per object?
+% https://aws.amazon.com/blogs/storage/turbocharge-amazon-s3-with-amazon-elasticache-for-redis/
+% lazy loading as soon as Redis layer is running
+% use multiple Redis instances if storage capacity reached
+% For now, we only maintain a single connection to the running Lambda runtime, so as soon as the endpoint scheduler would invoke a second function to handle another object, the previously established connection would be lost. This behavior is not the result of a bug but rather due to the fact that we focused on other issues during this work. 
+While the system is designed and mostly implemented to support multiple objects, proper connection management is missing. Supporting multiple objects raises some questions that we explore here in a theoretical framework that provides a foundation for potential future work. Our system can serve multiple objects within the same AWS Lambda function and self-hosted Redis instance, but how our endpoint scheduler works right now and how we handle connections prevents the system from adequately supporting multiple objects. While Redis is designed to cache multiple objects, using the serverless platform for multiple objects remains an open question. We think the best answer to this question is to use the endpoint scheduler as currently implemented on an object basis. So we call the Lambda function for a single object while the orchestrator and reverse proxy maintain multiple connections, with the key determining which connection leads to the Lambda runtime serving the desired object. Once the endpoint scheduler spins up the Redis instance, we apply the lazy loading technique and ignore the serverless platform. The orchestrator would need to keep track of the capacity of the Redis instance. If the capacity is exceeded, the serverless layer helps buffer the time required to set up the Redis cluster to expand its capacity. This has already opened the discussion on scaling, which will be continued in the next section.
+
+~\\
+Focusing on a single object already provides the opportunity to explore the possibilities of serverless computing for a reactive in-memory caching design. Covering multiple objects requires capacity management, which was not of central interest to us. Capacity management for Redis is not of much interest, as it only requires monitoring of running instances. The serverless platform includes one function per object and possibly splitting a large object into multiple functions, but this was already partially covered by InfiniCache~\cite{wang_infinicache_2020}.
+
+
+% \begin{itemize}
+%     \item Explain the limitations why our system does not support multiple objects.
+%     \item Our system currently only relies on a single self-hosted Redis instance and the number of concurrent AWS Lambda connections is currently limited to 1.
+%     \item So allowing multiple objects opens the question if our endpoint scheduler is acting on a per-object basis as of now, or if we keep the AWS Lambda layer for single objects, while as soon as we transition into the Redis state we forget about per-object processing.
+%     \item Number of objects still restricted by the size of the single Redis instance. 
+% \end{itemize}
+
+\section{Scaling}
+\label{sec:scaling}
+% base cache system for the peak motivation
+% about the peak motivation as discussed in the evaluation chapter
+% discussion about potential required load balancer in fron of the reverse proxy
+% multiple proxies requirement?
+% Distributed Redis (Redis Cluster)
+% Scalability:
+% We don't want to reinvent a scalable in-memory cache such as Redis to deal with all the challenges in building a distributed in-memory storage. We focus on making in-memory capacity in a self-contained system available more quickly in case of burst workload. When we take a look at scaling, we can argue that we certainly have a base system running and our system woks to buffer unexpected load while our system relies on a Redis cluster. In this case we would have to think about the Redis part and whether we want to replace our fast spinning up empty Redis instance with an dynamically setup Read replica. This would result in a higher startup time of the Redis instance, which could be helped out by our Lambda layer on a per object base, while as soon as the Redis instance is running we no longer care about single objects workload but the whole workload in order to decide if the additional instance is no longer needed.
+Our system attempts to use the serverless platform to improve a Redis-based in-memory caching system. The goal is not to develop an entirely new scalable in-memory cache, so our system is based on Redis as the core building block. While a Redis cluster theoretically provides scalability, the disadvantage of the ElastiCache managed service is the billing granularity based on node hours, resulting in poor cost efficiency when scaling is only required for short periods. Setting up the automation process for a self-hosted Redis cluster can lead to poor cost-efficiency or bad caching behavior for burst workloads. Scaling the Redis cluster relies on either ElastiCache or an automation process. Currently, our system only scales from zero to the size of one instance, focusing on burst workloads. Further scaling could be included in our system using our reactive design. So if we assume the scenario with a constant demand for in-memory caching (called base cache system), the more cost-effective solution would be to keep a Redis instance running to meet this demand constantly. Our system could form the basis to provide a managed scaling automation process for burst workloads on top of the constant demand. Our system could provide a lower-cost, fully managed service similar to ElastiCache by providing fine-grained elasticity through the reactive design of our system. There is still much work to be done to reach this level of implementation. However, the results of our system looked promising, so the direction described could help eliminate the need for an automation process and provide a cost-effective alternative to the AWS managed service.
+
+% Our system could form the basis to provide a managed scaling automation process. We initially focused on the case of burst workloads while the in-memory caching system is not needed most of the time. We extend this scenario by assuming constant demand for in-memory caching. Compared to our system, the more cost-effective solution would be to keep a Redis instance running to meet this demand constantly. The scaling of the Redis cluster relies on either ElastiCache or an automation process. So assume our system includes a base cache system, a pure Redis base system, and uses the system developed as part of this work to handle unexpected short-term spikes. Our system could provide a lower-cost, fully managed service similar to ElastiCache by providing fine-grained elasticity through the reactive design of our system. There is still much work to be done to reach this level of implementation. However, the results of our system looked promising, so the direction described could help eliminate the need for an automation process and provide a cost-effective alternative to the AWS managed service.
+
+~\\
+By reducing the focus of our work on burst workloads, we can ignore the base cache system and focus more on the integration of the serverless platform in this particular setting. The base cache system is purely Redis-based and deals with the management of the self-hosted Redis cluster and its monitoring, which is not of central interest with respect to the serverless platform.
+
+% \begin{itemize}
+%     \item The previous discussion about multiple objects leads to the scaling issue on our system.
+%     \item AWS Lambda can scale to infinity on a per-object basis, but what about the Redis layer?
+%     \item Orchestrator can use a Redis Cluster to scale horizontally.
+%     \item As soon as we enter this scale, we have to ask ourselves whether we are still in a scenario where our system actually makes sense.
+%     \item Probably not, so instead we could assume that we have Redis Cluster running as a so-called base system and use our system on top of it to handle unexpected peaks which probably just include a few single objects. 
+%     \item Explain the modification required to our system for this scenario on a high level.
+%     \item Motivate this use case by taking the billing granularity of AWS ElastiCache into consideration, the comparison for self-hosted Redis is already provided in the evaluation.
+% \end{itemize}
+
+\section{Extension of the Reverse Proxy API}
+\label{sec:api_extension}
+% We’re building a cache for AWS S3, so we should care about what other S3 Actions (https://docs.aws.amazon.com/AmazonS3/latest/API/API_Operations.html) exists and if we integrate them to our system. For now we ignore the general S3 API and just provide a \code{get} endpoint to retrieve an object in our system. When someone uses the web interface to change an object, our caching system doesn’t know about it, especially the orchestrator, which tells the gateway that we have the specified object in the cache should be aware of it. We will not be able to integrate every action and some actions do not make sense in our case (e.g. delete bucket), but we should have an overview of the available actions and classify them. This way we can discuss classes of actions and justify why we ignore them or integrate them only partially.
+
+% SET operations ()
+% Support SET operations by creating a pipeline to update the cache as new data is written to S3. Using AWS Lambda function trigger, to keep the cache fresh as data is being written to S3, works for Redis layer, for Lambda layer, probably forcing the proxy to remove the forwarding would be best.
+Our reverse proxy's API currently only supports \code{get} operations to retrieve objects specified by a key. Our reverse proxy stores information about keys when a particular in-memory layer is running, but we do not keep track of whether the object exists in S3, so requests for non-existing keys result in \emph{key not found}. This behavior is intentional, but it begs the question of what other S3 API operations are of interest to our system. If the client wants to push new objects, update existing objects, or delete existing objects, the S3 API should be used. In order to avoid retrieving a deleted object which was currently cached in our system, we have to consider those S3 API operations within the scope of our work. AWS Lambda function triggers would probably be the best way to accomplish this. Each time an object is added, updated, or deleted in the S3 bucket, a Lambda function is triggered to connect to our orchestrator to notify it of the event. If the object is not in the cache, our system does not care. However, suppose the object is in the cache and the client deletes or updates it. In that case, the orchestrator must either remove the cache entry and inform the reverse proxy or keep the cache up to date by retrieving the new object from persistent storage again. In both scenarios, the serverless layer would most likely require a manual shutdown of the function while the Redis layer could be updated dynamically. AWS Lambda function trigger is also the technique suggested by AWS when using ElastiCache to improve performance for S3 in combination with lazy loading~\cite{noauthor_turbocharge_2019}. So the only API endpoint our system would provide is the \code{get} endpoint, while the \code{put} and \code{delete} operations are supported via the S3 API, using AWS Lambda function triggers to keep our caching system up to date.
+
+~\\
+The issue of consistency is critical for building an in-memory caching system. However, in the context of this work exploring the possibilities of the serverless platform in a reactive system, it is sufficient to look at this aspect from a theoretical point of view.  
+
+
+\section{Usability}
+\label{sec:usability}
+% small conclusion about the evaluation of our system and the actual usability of it
+The applicability of our system in practice is currently limited by the restrictions mentioned in the previous section; as long as our system supports only one object, the applicability of our system is limited. Also, comparing our system with a fully managed service like ElastiCache, which supports auto-scaling, should be done with caution. 
+
+~\\
+However, for bursty workloads that inspired the reactive design of our system, using an additional in-memory layer based on serverless computing seems promising for building a cost-effective in-memory caching system. The current design of our reactive endpoint scheduler has issues with general workloads, where a pure Redis-based system is much more practical and cost-effective, but these issues will be addressed in future work. Interestingly, the fine-grained elasticity is limited in current managed services such as ElastiCache based on node hours. Therefore, we focused on burst workloads to address the elasticity issue for workloads that last less than an hour in this work.
+
+~\\
+The reactive design of our system aims to solve this very problem, where a simple automation process for self-hosted Redis would have difficulty provisioning the instance when in-memory caching is needed. We assume that developing an automation process capable of predicting future in-memory caching needs with a low error rate is rather infeasible, motivating the simple design of our reactive system. The reactive endpoint scheduler can provision in-memory caching using the serverless platform in less than a second. In the case of a warm startup, the serverless in-memory layer is even available within milliseconds. A pure Redis-based reactive system suffers from startup times of half a minute, so for workloads that last about a minute, our system significantly outperforms a pure Redis-based reactive system in terms of the in-memory portion served from the cache. Thus, serverless computing as an additional in-memory caching layer shows its potential in terms of the responsiveness of a reactive system. Building a cost-effective in-memory caching system using the less cost-effective serverless platform is counterintuitive. Therefore, our system can never beat a pure Redis-based reactive system in terms of cost. However, the improved responsiveness leads to a higher in-memory percentage, which is crucial for workloads lasting only a few minutes.
+
+~\\
+Suppose we can design a perfect automation process that is able to predict the arrival times of the workloads and thus run the self-hosted Redis instance for the exact duration of the workloads. This avoids any unnecessary over-provisioning, resulting in a perfect cost-efficient in-memory caching system. The feasibility of such a system is another matter. However, depending on the workload and its tail distribution, our system can achieve similar or even lower costs with an in-memory hit-rate of 95\%. 
+
+~\\
+Thus, the results of a Redis-based reactive in-memory caching system with serverless computing in this work look promising and provide a basis to improve the elasticity constraint on the node hours of current fully managed services without knowing the workload in advance.
+
+% So, in summary, building a reactive Redis-based in-memory caching system with serverless computing looks promising for given situations, but the current state of the implementation clearly limits the use case of our system as a general in-memory caching service. Based on the foundation and design of our system, the outlook will show future work which targets to make our system more relevant and overcome any shortcoming to actually provide a scalable managed in-memory caching service similar to ElastiCache.
+
+% However, if an application needs in-memory caching only in certain situations and for a short period of time, our system is able to beat a pure Redis-based system in terms of cost and still provide a high in-memory percentage. 
+
+
+% \section{Outlook}
+% \label{sec:outlook}
+% % Consequences of your work?
+% % Possible future work?
+% In this section, we first address the limitations of our system and show how we can make our system more relevant as a managed in-memory caching service. The extension of our system described here shows the potential for building a scalable managed service similar to ElastiCache based on our work. The reactive design of our system helps minimize costs by avoiding over-provisioning in-memory caching resources. At the same time, the use of serverless computing mitigates the startup problem of a simple reactive automation process for a pure Redis-based system.
+
+% \subsection{Limitations and Restrictions}
+% This section refers to the issues mentioned in Section~\ref{sec:limitations_and_restrictions} and the necessary adjustments and considerations in our implementation to address them.
+
+% \subsection{Improve Endpoint Scheduler}
+% \label{sec:improve_endpoint_scheduler}
+% The improvement of the endpoint scheduler offers many exciting starting points for future work. The reactive design of our endpoint scheduler could be improved by using proactive decisions. Integrating a proactive endpoint scheduler could help our system handle workloads where a reactive design leads to poor performance. However, integrating a proactive endpoint scheduler would require some prediction, which is not straightforward and opens a new research topic on its own. However, it would open many new possibilities for designing the endpoint scheduler.
+
+% ~\\
+% A more promising approach is offered by InfiniCache~\cite{wang_infinicache_2020} to provide caching for infrequent requests. Compared to our system, they do not use the serverless platform as a server listening to requests. Instead, their request directly invokes the function which stores the object. Using their system to manage the AWS Lambda execution environments to keep them warm allows for fast startup times and fast data retrieval. Extending our system by incorporating their approach to handling requests currently forwarded to S3 could improve average latency by achieving 100\% in-memory caching. The startup latencies measured in section~\ref{subsec:startup_times} look promising for warm lambda starts, and compared to these measurements, the reverse proxy would call the function itself, further reducing startup latency by eliminating the additional delay in message passing. Thus, integrating their approach could lead to a 100 percent in-memory caching system that can handle workloads that our system cannot respond to cost-efficiently. This adaption would also remove the direct impact of the system parameters concerning the in-memory portion.
+
+% \subsection{Reverse Proxy as Client Library}
+% \label{sec:proxy_as_client_library}
+% Section~\ref{subsec:end_to_end_latency} has shown that the way we test and deploy our system is not ideal in the context of in-memory caching. Internet traffic latency accounts for a large portion of the end-to-end latency and drastically impacts the potential speedup. Deploying the reverse proxy on a separate EC2 instance requires an additional copy of the data, impacting end-to-end latency as object size increases. As long as the client/application runs outside the AWS infrastructure, we can only improve the simple copy. However, suppose the client/application is running in the AWS infrastructure. In that case, our reverse proxy could be wrapped in a client library that provides the same \code{get} API but runs on the same host as the application, similar to the design of InfiniCache~\cite{wang_infinicache_2020}. By customizing our system in this way, we can avoid the additional copy, resulting in better end-to-end latency for each layer, highlighting the latency difference between in-memory caching and the persistent storage layer. 
+
+% The changes required are quite small as the reverse proxy has just to be wrapped inside a client library which is initialized at the beginning, while the communication with the orchestrator would remain the same. Further customization is required when multiple applications using the client library may be active at the same time. In this case, the orchestrator would need to manage multiple reverse proxy connections while the Lambda runtime connects to each running client library. These changes can be made relatively easily, but some additional adjustments are required when initializing a client library while our system is already up and running to keep the forwarding state consistent between all client libraries. 
+
+% \subsection{Authentication and Security}
+% \label{sec:authentication_and_security}
+% % how do we check authentication for requests
+% % what other security aspects are relevant or need to be considered
+% \begin{itemize}
+%     \item Authentication for requests?
+%     \item What other security aspects are relevant or needed to be considered?
+% \end{itemize}

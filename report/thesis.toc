@@ -1,0 +1,117 @@
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}%
+\contentsline {chapter}{\numberline {2}Background}{3}{chapter.2}%
+\contentsline {section}{\numberline {2.1}In-Memory Data Management}{3}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}NoSQL}{4}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}Redis}{4}{subsection.2.1.2}%
+\contentsline {paragraph}{Persistence.}{4}{section*.2}%
+\contentsline {paragraph}{Scaling.}{5}{section*.3}%
+\contentsline {paragraph}{History.}{5}{section*.4}%
+\contentsline {paragraph}{Revisiting the CAP Theorem.}{5}{section*.5}%
+\contentsline {paragraph}{Redis as a Cache.}{5}{section*.6}%
+\contentsline {section}{\numberline {2.2}AWS Services}{5}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Simple Storage Service (S3)}{6}{subsection.2.2.1}%
+\contentsline {paragraph}{Pricing.}{6}{section*.7}%
+\contentsline {subsection}{\numberline {2.2.2}Elastic Compute Cloud (EC2)}{6}{subsection.2.2.2}%
+\contentsline {paragraph}{Networking.}{6}{section*.9}%
+\contentsline {paragraph}{Pricing.}{7}{section*.10}%
+\contentsline {subsubsection}{Application in Practice: Self-Hosted Redis}{7}{section*.11}%
+\contentsline {subsection}{\numberline {2.2.3}ElastiCache}{8}{subsection.2.2.3}%
+\contentsline {paragraph}{Cluster Mode Disabled vs. Enabled.}{8}{section*.12}%
+\contentsline {paragraph}{Auto Scaling.}{8}{section*.13}%
+\contentsline {paragraph}{Pricing.}{8}{section*.14}%
+\contentsline {subsection}{\numberline {2.2.4}Serverless Computing}{9}{subsection.2.2.4}%
+\contentsline {paragraph}{Execution Environment.}{10}{section*.16}%
+\contentsline {paragraph}{Reusable Execution Environments.}{10}{section*.17}%
+\contentsline {paragraph}{Networking.}{10}{section*.18}%
+\contentsline {paragraph}{Pricing.}{10}{section*.19}%
+\contentsline {chapter}{\numberline {3}Design}{11}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Design Goals}{11}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}Redis-based Caching}{11}{subsection.3.1.1}%
+\contentsline {subsection}{\numberline {3.1.2}Problem Setting}{12}{subsection.3.1.2}%
+\contentsline {subsection}{\numberline {3.1.3}Reactive Caching}{12}{subsection.3.1.3}%
+\contentsline {section}{\numberline {3.2}Design Overview}{13}{section.3.2}%
+\contentsline {section}{\numberline {3.3}System Workflow}{14}{section.3.3}%
+\contentsline {paragraph}{Endpoint Scheduler.}{15}{section*.22}%
+\contentsline {chapter}{\numberline {4}Implementation}{16}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Reverse Proxy}{16}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Startup}{17}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.1.2}Forwarding}{17}{subsection.4.1.2}%
+\contentsline {subsubsection}{In-Flight Handling}{18}{section*.23}%
+\contentsline {subsubsection}{Updates}{18}{section*.24}%
+\contentsline {section}{\numberline {4.2}Orchestrator}{19}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Startup}{19}{subsection.4.2.1}%
+\contentsline {paragraph}{Development API.}{19}{section*.25}%
+\contentsline {subsection}{\numberline {4.2.2}Orchestration of the Caching Layer}{19}{subsection.4.2.2}%
+\contentsline {subsubsection}{Self-hosted Redis}{20}{section*.26}%
+\contentsline {subsubsection}{Lambda Runtime}{20}{section*.27}%
+\contentsline {subsection}{\numberline {4.2.3}Endpoint Scheduler}{21}{subsection.4.2.3}%
+\contentsline {subsubsection}{State Diagram}{21}{section*.29}%
+\contentsline {subsubsection}{System Parameters}{22}{section*.30}%
+\contentsline {subsubsection}{Reactive Event-Based Mechanism.}{22}{section*.31}%
+\contentsline {subsection}{\numberline {4.2.4}System Configurator}{24}{subsection.4.2.4}%
+\contentsline {section}{\numberline {4.3}Storage Backend}{25}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Serverless}{25}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}Startup}{25}{subsection.4.4.1}%
+\contentsline {subsection}{\numberline {4.4.2}Runtime}{26}{subsection.4.4.2}%
+\contentsline {subsection}{\numberline {4.4.3}Connection Management}{26}{subsection.4.4.3}%
+\contentsline {section}{\numberline {4.5}Self-Hosted Redis}{27}{section.4.5}%
+\contentsline {chapter}{\numberline {5}Evaluation}{28}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Setup}{28}{section.5.1}%
+\contentsline {subsection}{\numberline {5.1.1}System Deployment}{29}{subsection.5.1.1}%
+\contentsline {subsection}{\numberline {5.1.2}Simulation Environment}{29}{subsection.5.1.2}%
+\contentsline {subsubsection}{Trace Generation/Derivation}{29}{section*.32}%
+\contentsline {subsubsection}{Simulation}{30}{section*.33}%
+\contentsline {subsubsection}{Evaluation}{30}{section*.34}%
+\contentsline {subsection}{\numberline {5.1.3}Offline Endpoint Scheduler}{31}{subsection.5.1.3}%
+\contentsline {subsubsection}{Assumptions and Cost Considerations}{31}{section*.35}%
+\contentsline {paragraph}{Algorithm.}{32}{section*.36}%
+\contentsline {subsection}{\numberline {5.1.4}Comparison Systems}{32}{subsection.5.1.4}%
+\contentsline {subsubsection}{Cost Considerations}{32}{section*.37}%
+\contentsline {paragraph}{S3 only.}{33}{section*.38}%
+\contentsline {paragraph}{ElastiCache for Redis.}{33}{section*.39}%
+\contentsline {paragraph}{Self-Hosted Redis}{33}{section*.40}%
+\contentsline {section}{\numberline {5.2}End-to-end Latency}{34}{section.5.2}%
+\contentsline {paragraph}{Summary.}{37}{section*.43}%
+\contentsline {section}{\numberline {5.3}Simulations}{37}{section.5.3}%
+\contentsline {paragraph}{Figure Description.}{38}{section*.45}%
+\contentsline {paragraph}{Sensitivity Value.}{38}{section*.48}%
+\contentsline {paragraph}{Offline Endpoint Scheduler.}{39}{section*.49}%
+\contentsline {paragraph}{Comparison Systems.}{39}{section*.50}%
+\contentsline {paragraph}{Varying Workload.}{40}{section*.52}%
+\contentsline {paragraph}{Summary.}{41}{section*.57}%
+\contentsline {section}{\numberline {5.4}Endpoint Scheduler}{41}{section.5.4}%
+\contentsline {paragraph}{System Parameters in Action.}{41}{section*.58}%
+\contentsline {paragraph}{Simulation Analysis.}{41}{section*.60}%
+\contentsline {paragraph}{Endpoint Scheduler Limitations.}{46}{section*.61}%
+\contentsline {paragraph}{Summary.}{47}{section*.62}%
+\contentsline {section}{\numberline {5.5}Bursty Workload}{48}{section.5.5}%
+\contentsline {paragraph}{Perfect Automation Process.}{48}{section*.65}%
+\contentsline {paragraph}{Simulation Results.}{49}{section*.68}%
+\contentsline {paragraph}{Tail Distribution.}{50}{section*.69}%
+\contentsline {paragraph}{Burst Frequency.}{51}{section*.71}%
+\contentsline {paragraph}{Summary.}{51}{section*.72}%
+\contentsline {section}{\numberline {5.6}Startup Times}{52}{section.5.6}%
+\contentsline {paragraph}{Experiment Description.}{52}{section*.73}%
+\contentsline {paragraph}{Results.}{52}{section*.74}%
+\contentsline {paragraph}{Summary.}{52}{section*.75}%
+\contentsline {chapter}{\numberline {6}Discussion}{54}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Multiple Objects}{54}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Scaling}{55}{section.6.2}%
+\contentsline {section}{\numberline {6.3}Extension of the Reverse Proxy API}{55}{section.6.3}%
+\contentsline {section}{\numberline {6.4}Usability}{56}{section.6.4}%
+\contentsline {chapter}{\numberline {7}Related Work}{58}{chapter.7}%
+\contentsline {section}{\numberline {7.1}In-Memory Caching}{58}{section.7.1}%
+\contentsline {section}{\numberline {7.2}Multi-Layer Storage Systems}{59}{section.7.2}%
+\contentsline {section}{\numberline {7.3}Serverless Computing}{59}{section.7.3}%
+\contentsline {section}{\numberline {7.4}Intermediate Data Caching}{59}{section.7.4}%
+\contentsline {chapter}{\numberline {8}Conclusion and Outlook}{60}{chapter.8}%
+\contentsline {chapter}{References}{62}{chapter.8}%
+\contentsline {chapter}{\numberline {A}Appendix}{I}{appendix.A}%
+\contentsline {section}{\numberline {A.1}AWS Setup}{I}{section.A.1}%
+\contentsline {subsection}{\numberline {A.1.1}Deployment}{I}{subsection.A.1.1}%
+\contentsline {subsection}{\numberline {A.1.2}Network Configuration}{I}{subsection.A.1.2}%
+\contentsline {subsection}{\numberline {A.1.3}Security Concerns}{II}{subsection.A.1.3}%
+\contentsline {subsection}{\numberline {A.1.4}Self-Hosted Redis Instance}{II}{subsection.A.1.4}%
+\contentsline {section}{\numberline {A.2}System Configurator Algorithm}{II}{section.A.2}%
+\contentsline {section}{\numberline {A.3}Simulation Overview}{III}{section.A.3}%
+\contentsline {section}{\numberline {A.4}Offline Endpoint Scheduler Algorithm}{IV}{section.A.4}%

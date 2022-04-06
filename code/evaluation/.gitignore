@@ -1,0 +1,4 @@
+.vscode
+__pycache__
+simulation/old
+evaluation/old

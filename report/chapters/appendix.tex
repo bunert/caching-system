@@ -1,0 +1,156 @@
+\chapter{Appendix}
+\label{app:a}
+% - material which is not absolutely necessary to understand and follow the work
+% - code snippets
+% - additional plots
+
+\section{AWS Setup}
+\label{sec:aws_setup}
+% include relevant details for the setup on the AWS platform
+% setup of the building blocks in general
+% network specific configurations (VPC, inbound rules)
+In Appendix~\ref{subsec:deployment} we describe how our system can be used and what to consider regarding the AWS infrastructure on which our system runs. First, we explain how the orchestrator and Reverse Proxy instances obtain their executable binaries, while Appendix~\ref{subsec:network_configuration} provides some details on the network configurations required for the necessary communication, followed by some clarifications on the security concerns in the context of this work and implementation in Appendix~\ref{subsec:security_concerns}. In Appendix~\ref{subsec:self_hosted_redis_instance} we describe the instance that hosts the Redis server.
+
+\subsection{Deployment}
+\label{subsec:deployment}
+While our system dynamically determines the IP addresses used for communication, the instance ID for the orchestrator is fixed in the source code so that the reverse proxy can establish initial communication at startup. We have also set the instance ID for the self-hosted Redis instance, since we are focusing on a single instance for the purposes of this work. The scripts \code{build\_gateway.sh} and \code{build\_orchestrator.sh} can be used to create the executable binaries for the reverse proxy and orchestrator. The script allows you to specify the IP address of the instance that hosts it to transfer the executable to the corresponding instance. The \code{build\_lambda.sh} script creates the executable file for the Lambda layer and updates the function code of the existing Lambda function. Starting the system requires executing the orchestrator binary, followed by the reverse proxy binary.
+
+\subsection{Network Configuration}
+\label{subsec:network_configuration}
+In order to execute/transfer the binaries, the EC2 instances must allow incoming traffic to enable SSH access. We briefly cover the AWS infrastructure settings related to VPCs and security groups. Everything we deploy is within our standard VPC provided by AWS. The associated security group for each EC2 instance contains rules to allow inbound network traffic for the required ports used for communication. In addition, we allow incoming traffic for port 22 for SSH communication. The way our system performs connection management for the Lambda layer requires a special inbound rule for our orchestrator and reverse proxy. The port used to listen to communication from the Lambda runtime must restrict the source to the VPC. Therefore, the Lambda function must be configured within the same VPC, which is the case as long as we only use the default VPC.
+
+\subsection{Security Concerns}
+\label{subsec:security_concerns}
+Security was outside the scope of this work, so we could ignore most of the AWS-specific settings. Some exceptions, such as the network configuration mentioned above, and some specific settings are briefly discussed in this section. The session required by the \code{aws-sdk-go} used for various parts of our work is obtained from environment variables that contain the required information for the AWS account. The Lambda function is configured with a specific execution role for permission to access the S3 bucket.
+
+\subsection{Self-Hosted Redis Instance}
+\label{subsec:self_hosted_redis_instance}
+This section covers the EC2 instance hosting a Redis server for our in-memory caching layer. The instance itself does not restrict incoming traffic, while access management is performed by the Redis server itself and requires a password. The password is hard coded in the source code, as it is required by both the orchestrator and the reverse proxy. The Redis server on this instance is set up to run as daemon as soon as the instance is started~\cite{hsieh_spin_2020}.
+
+\section{System Configurator Algorithm}
+\label{sec:system_configurator_algorithm}
+Our current system configurator is a simple step function, as it only helped us explore the impact of system parameters on our simulations. While experimenting with lower rate workloads, we found that our system needs some sort of information about the average rate of incoming requests in order to set appropriate parameters for our endpoint scheduler. Therefore, the first input parameter for our system configurator is the rate parameter, which describes the average number of requests per minute. The second parameter describes the sensitivity value, which we have already described. The pseudocode below shows the step function algorithm for deriving the system parameters according to the input:
+\begin{algorithm}
+    \caption{System Configurator}\label{alg:system_configurator}
+    \begin{algorithmic}
+        \Procedure{GetSystemParamaeters}{rate, sensitivity}
+            \State $maxSens \gets 5$
+            \State $lambdaWindowElements \gets 2$
+            \State $redisThreshold \gets 4$
+
+            \State $t \gets 60.0/rate$ \Comment{Seconds between two requests on average}
+            \State $tick \gets (t - ((maxSens - sensitivity) \times (t / maxSens)))$ \Comment{Duration in seconds}
+            \State $lambdaThreshold \gets (tick \times lambdaWindowElements)$ \Comment{Duration in seconds}
+            \State $redisUtilization \gets (t \times (sensitivity+5))$ \Comment{Duration in seconds}
+            \State \Return system parameters
+        \EndProcedure
+    \end{algorithmic}
+\end{algorithm}
+
+\newpage
+\begin{landscape}
+    \section{Simulation Overview}
+    \label{sec:simulation_overview}
+    \begin{table*}[ht!]
+        \centering
+        \ra{1.2}
+        \begin{adjustbox}{max width=\linewidth}
+        \begin{tabular}{ @{} l r r r r r c r r r c r r c r @{}}
+        \toprule
+        & \multicolumn{5}{c}{\textbf{AWS Lambda}} & \phantom{abc} & \multicolumn{3}{c}{\textbf{Self-Hosted Redis}} & \phantom{abc} & \multicolumn{2}{c}{\textbf{AWS S3}} & \phantom{abc} & \phantom{abc} \\
+        \cmidrule{2-6} \cmidrule{8-10} \cmidrule{12-13}
+        \textbf{Simulation} & \textbf{Duration} & \textbf{Cost} & \textbf{Inv.} & \textbf{Cold} & \textbf{Cost} && \textbf{Duration} & \textbf{Inv.} & \textbf{Cost} && \textbf{Req.} & \textbf{Cost} && \textbf{Total Cost}\\
+        \midrule
+        Figure~\ref{fig:ec2log_3_2} &   556170ms & 0.00929 & 36 & 3 & 0.0000072 && 1020s & 1 & 0.00377 && 81  & 0.0000348 && 0.0131 \\
+        Figure~\ref{fig:ec2log_3_3} &   393809ms & 0.00657 & 10 & 4 & 0.0000020 && 2040s & 2 & 0.00759 && 31  & 0.0000133 && 0.0142 \\
+        Figure~\ref{fig:ec2log_3_4} &   161806ms & 0.00270 & 4 &  1 & 0.0000008 && 2701s & 1 & 0.01005 && 13  & 0.0000056 && 0.0128 \\
+        Figure~\ref{fig:ec2log_s3} &    x &        x &       x &  x & x         && x     & x & x       && 175 & 0.0000753 && 0.0000753 \\
+        Figure~\ref{fig:ec2log_ec} &    x &        x &       x &  x & x         && x     & x & x       && 1   & 0.00000043 && 0.019 \\
+        Figure~\ref{fig:poisson_3_2} &  328207ms & 0.00548 & 27 & 1 & 0.0000054 && 0s    & 0 & 0       && 69  & 0.0000296 && 0.00552 \\
+        Figure~\ref{fig:poisson_3_3} &  499976ms & 0.00835 & 21 & 1 & 0.0000042 && 281s  & 1 & 0.00105 && 46  & 0.0000198 && 0.00942 \\
+        Figure~\ref{fig:poisson_3_4} &  381188ms & 0.00637 & 10 & 2 & 0.0000020 && 859s  & 2 & 0.00320 && 26  & 0.0000112 && 0.00958 \\
+        Figure~\ref{fig:poisson_3_5} &  506881ms & 0.00846 & 11 & 1 & 0.0000022 && 849s  & 2 & 0.00316 && 23  & 0.0000099 && 0.0116 \\
+        Figure~\ref{fig:poisson_4_2} &  350962ms & 0.00586 & 31 & 1 & 0.0000062 && 300s  & 1 & 0.00112 && 76  & 0.0000327 && 0.00702 \\
+        Figure~\ref{fig:poisson_4_3} &  512991ms & 0.00857 & 31 & 1 & 0.0000062 && 437s  & 1 & 0.00163 && 62  & 0.0000267 && 0.0102 \\
+        Figure~\ref{fig:poisson_4_4} &  817102ms & 0.01365 & 17 & 1 & 0.0000034 && 681s  & 4 & 0.00253 && 35  & 0.0000151 && 0.0162 \\
+        Figure~\ref{fig:poisson_4_5} &  266881ms & 0.00446 & 3 &  1 & 0.0000006 && 1500s & 2 & 0.00558 && 8   & 0.0000034 && 0.0100 \\
+        Figure~\ref{fig:spike_1} &      61531ms &  0.00103 & 5 &  1 & 0.0000010 && 240s  & 1 & 0.00089 && 9   & 0.0000039 && 0.00193 \\
+        Figure~\ref{fig:spike_2} &      51477ms &  0.00086 & 3 &  1 & 0.0000006 && 421s  & 1 & 0.00156 && 12  & 0.0000052 && 0.00243 \\
+        Figure~\ref{fig:spike_3} &      76754ms &  0.00128 & 7 &  1 & 0.0000014 && 601s  & 1 & 0.00224 && 16  & 0.0000069 && 0.00353 \\
+        Figure~\ref{fig:spike_4} &      129234ms & 0.00216 & 10 & 1 & 0.0000020 && 1141s & 1 & 0.00425 && 31  & 0.0000133 && 0.00642 \\
+        \bottomrule
+        \end{tabular}
+        \end{adjustbox}
+        \caption{More detailed insights for each layer during our simulation. Parameters were either logged by the orchestrator or queried by AWS CloudWatch. Total costs are derived from these observations. Costs are in USD for the Europe (Frankfurt) region and are calculated according to the base costs of the specified units (EC2, ElastiCache, Lambda). The table contains the total billed time for Lambda and the cost. The total number of function calls, the number of cold starts, and the cost in terms of function invocations. For the self-hosted Redis tier, we show the total billed duration (the minimum billed duration of 60 seconds is already included), the number of starts, and the cost in terms of duration. S3 includes the total number of requests, including the cold-starts and Redis starts and the associated cost. The last column shows the total cost for the simulation.}
+        \label{tab:costs}
+    \end{table*}
+\end{landscape}
+
+\section{Offline Endpoint Scheduler Algorithm}
+\label{sec:offline_endpoint_scheduler_algorithm}
+% TODO: short explanation and reference to actual code
+The offline endpoint scheduler allows us to evaluate the performance of our endpoint scheduler by presenting an algorithm with complete information about the incoming workload. The algorithm derives a cost-effective use of our in-memory caching layer with respect to the assumptions and calculations presented in Section~\ref{sec:offline_endpoint_scheduler}. The core logic of the algorithm is presented in the same section, while the following pseudocode provides a more detailed description.
+
+\algnewcommand\algorithmicswitch{\textbf{switch}}
+\algnewcommand\algorithmiccase{\textbf{case}}
+\algnewcommand\algorithmicassert{\texttt{assert}}
+\algnewcommand\Assert[1]{\State \algorithmicassert(#1)}%
+% New "environments"
+\algdef{SE}[SWITCH]{Switch}{EndSwitch}[1]{\algorithmicswitch\ #1\ \algorithmicdo}{\algorithmicend\ \algorithmicswitch}%
+\algdef{SE}[CASE]{Case}{EndCase}[1]{\algorithmiccase\ #1}{\algorithmicend\ \algorithmiccase}%
+\algtext*{EndSwitch}%
+\algtext*{EndCase}%
+
+\begin{algorithm}[H]
+    \caption{Checks if next request should be served by individual Lambda runtime.}\label{alg:offline_endpoint_scheduler2}
+    \small
+    \begin{algorithmic}
+        \Procedure{checkStart}{}
+            \If{next 9 requests within $90$ seconds}
+                \State $lambdaList \gets$ append $30s$ Lambda runtime
+                \State $redisList \gets$ append $60s$ Redis runtime
+                \State $state \gets redis$
+            \Else
+                \State $lambdaList \gets$ append $5s$ Lambda runtime
+                \State $state \gets lambda$
+            \EndIf
+        \EndProcedure
+    \end{algorithmic}
+\end{algorithm}
+\begin{algorithm}[H]
+    \caption{Offline Endpoint Scheduler}\label{alg:offline_endpoint_scheduler}
+    \small
+    \begin{algorithmic}
+        \State $state \gets none$
+        \State $lambdaList, redisList \gets$ empty list \Comment{Keep track of Lambda start and end times}
+        \While{further requests to process}
+        \Switch{$state$}
+            \Case{$none$}
+                \State \Call{checkStart}{}
+            \EndCase
+            \Case{$lambda$}
+                \If{Lambda runtime still running}
+                    \If{next 9 requests within $90$ seconds}
+                        \State $lambdaList \gets$ extend last runtime by $30s$
+                        \State $redisList \gets$ append $60s$ Redis runtime
+                        \State $state \gets redis$
+                    \Else
+                        \State $lambdaList \gets$ extend last runtime by $5s$
+                    \EndIf
+                \Else
+                    \State \Call{checkStart}{} \Comment{Lambda runtime not running}
+                \EndIf
+            \EndCase
+            \Case{$redis$}
+                \If{Redis still running}
+                    \State continue
+                \ElsIf{next request withing $104.6$ seconds} \Comment{Redis not running}
+                    \State extend Redis runtime
+                \Else
+                    \State \Call{checkStart}{}
+                \EndIf
+            \EndCase
+        \EndSwitch
+        \EndWhile
+    \end{algorithmic}
+\end{algorithm}
